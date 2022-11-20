@@ -33,6 +33,7 @@ class TableSerializer(MathesarErrorMessageMixin, serializers.ModelSerializer):
     previews_url = serializers.SerializerMethodField()
     dependents_url = serializers.SerializerMethodField()
     name = serializers.CharField(required=False, allow_blank=True, default='')
+    display_options = serializers.DictField()
     import_target = serializers.PrimaryKeyRelatedField(
         required=False, allow_null=True, queryset=Table.current_objects.all()
     )
@@ -50,7 +51,7 @@ class TableSerializer(MathesarErrorMessageMixin, serializers.ModelSerializer):
             'import_verified', 'columns', 'records_url', 'constraints_url',
             'columns_url', 'joinable_tables_url', 'type_suggestions_url',
             'previews_url', 'data_files', 'has_dependents', 'dependents_url',
-            'settings', 'description',
+            'settings', 'description', 'display_options'
         ]
 
     def get_records_url(self, obj):
@@ -141,6 +142,9 @@ class TableSerializer(MathesarErrorMessageMixin, serializers.ModelSerializer):
         except ProgrammingError as e:
             raise ProgrammingAPIException(e)
         return table
+
+    def reorder_columns(self, colum_order):
+        self.colum_order = colum_order
 
     def update(self, instance, validated_data):
         if self.partial:

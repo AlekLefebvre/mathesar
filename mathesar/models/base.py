@@ -296,6 +296,7 @@ class Table(DatabaseObject, Relation):
     import_verified = models.BooleanField(blank=True, null=True)
     import_target = models.ForeignKey('Table', blank=True, null=True, on_delete=models.SET_NULL)
     is_temp = models.BooleanField(blank=True, null=True)
+    display_options = JSONField(null=True, default=None)
 
     class Meta:
         constraints = [
