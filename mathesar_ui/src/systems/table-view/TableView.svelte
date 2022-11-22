@@ -13,7 +13,6 @@
   import Header from './header/Header.svelte';
   import StatusPane from './StatusPane.svelte';
   import TableInspector from './table-inspector/TableInspector.svelte';
-  import { tables as tablesStore } from '@mathesar/stores/tables';
 
   const tabularData = getTabularDataStoreFromContext();
 
@@ -72,8 +71,6 @@
   }
 
   function orderProcessedColumns(processedColumns: Map<number, ProcessedColumn>, columnOrder: number[]):Map<number, ProcessedColumn> {
-    console.log("ORDER COLUMNS")
-    console.log(columnOrder)
     let allColumns = [...processedColumns.values()];
     let orderedColumns = new Map<number, ProcessedColumn>();
       columnOrder.forEach(id => {
@@ -84,7 +81,6 @@
       }
     });
     allColumns.forEach(column => orderedColumns.set(column.id, column))
-    console.log(orderedColumns);
     return orderedColumns;
   }
 

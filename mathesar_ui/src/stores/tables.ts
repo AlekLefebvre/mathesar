@@ -255,8 +255,6 @@ export function createTable(
           const tableEntryMap: DBTablesStoreData['data'] = new Map();
           sortedTableEntries([...existing.data.values(), value]).forEach(
             (entry) => {
-              console.log("CREATE TABLE");
-              console.log(entry)
               tableEntryMap.set(entry.id, entry);
             },
           );
@@ -359,8 +357,6 @@ export function getTableFromStoreOrApi(
           store.update((existing) => {
             const tableMap = new Map<number, TableEntry>();
             const tables = [...existing.data.values(), table];
-            console.log("GET TABLE")
-            console.log(tables);
             sortedTableEntries(tables).forEach((t) => {
               tableMap.set(t.id, t);
             });

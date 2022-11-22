@@ -31,6 +31,7 @@
     id: table.id,
     abstractTypesMap,
     meta,
+    column_order: table.display_options.column_order, //check for null ?
   });
   $: tabularDataStore.set(tabularData);
 
