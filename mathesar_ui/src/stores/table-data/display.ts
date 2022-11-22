@@ -78,7 +78,7 @@ export class Display {
     this.horizontalScrollOffset = writable(0);
     this.scrollOffset = writable(0);
     this.isTableInspectorVisible = writable(true);
-  
+
     this.customizedColumnWidths = new WritableMap();
 
     this.columnPlacements = derived(

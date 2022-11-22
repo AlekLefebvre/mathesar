@@ -39,8 +39,7 @@ def get_table_list(request, schema):
     table_serializer = TableSerializer(
         Table.objects.filter(schema=schema),
         many=True,
-        context={'request': request},
-        
+        context={'request': request}
     )
     return table_serializer.data
 

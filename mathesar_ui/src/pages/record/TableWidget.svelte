@@ -31,7 +31,7 @@
     id: table.id,
     abstractTypesMap,
     meta,
-    column_order: table.display_options.column_order, //check for null ?
+    column_order: table.display_options.column_order, // check for null ?
     contextualFilters: new Map([[fkColumn.id, recordId]]),
   });
   $: tabularDataStore.set(tabularData);

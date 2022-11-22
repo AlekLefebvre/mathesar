@@ -6,13 +6,13 @@
     ID_ADD_NEW_COLUMN,
     ID_ROW_CONTROL_COLUMN,
     type TabularDataSelection,
-    type ProcessedColumn,
   } from '@mathesar/stores/table-data';
   import { rowHeaderWidthPx } from '@mathesar/geometry';
   import Body from './Body.svelte';
   import Header from './header/Header.svelte';
   import StatusPane from './StatusPane.svelte';
   import TableInspector from './table-inspector/TableInspector.svelte';
+  import { orderProcessedColumns } from '@mathesar/utils/tables';
 
   const tabularData = getTabularDataStoreFromContext();
 
@@ -68,20 +68,6 @@
         );
       }
     }
-  }
-
-  function orderProcessedColumns(processedColumns: Map<number, ProcessedColumn>, columnOrder: number[]):Map<number, ProcessedColumn> {
-    let allColumns = [...processedColumns.values()];
-    let orderedColumns = new Map<number, ProcessedColumn>();
-      columnOrder.forEach(id => {
-      var index = allColumns.map(column => column.id).indexOf(id);
-      if (index !== -1) {
-        const orderColumn = allColumns.splice(index, 1)[0]
-        orderedColumns.set(orderColumn.id, orderColumn);
-      }
-    });
-    allColumns.forEach(column => orderedColumns.set(column.id, column))
-    return orderedColumns;
   }
 
   $: void selectAndActivateFirstCellOnTableLoad($isLoading, selection);
