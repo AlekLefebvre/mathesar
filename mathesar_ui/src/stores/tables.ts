@@ -218,6 +218,24 @@ export function renameTable(
   );
 }
 
+export function reorderColumns(
+  id: number,
+  column_order: string,
+): CancellablePromise<TableEntry> {
+  const promise = patchAPI<TableEntry>(`/api/db/v0/tables/${id}/`, { display_options: column_order });
+  return new CancellablePromise(
+    (resolve, reject) => {
+      void promise.then((value) => {
+        findAndUpdateTableStore(id, value);
+        return resolve(value);
+      }, reject);
+    },
+    () => {
+      promise.cancel();
+    },
+  );
+}
+
 export function createTable(
   schema: SchemaEntry['id'],
   tableArgs: {
@@ -237,6 +255,8 @@ export function createTable(
           const tableEntryMap: DBTablesStoreData['data'] = new Map();
           sortedTableEntries([...existing.data.values(), value]).forEach(
             (entry) => {
+              console.log("CREATE TABLE");
+              console.log(entry)
               tableEntryMap.set(entry.id, entry);
             },
           );
@@ -339,6 +359,8 @@ export function getTableFromStoreOrApi(
           store.update((existing) => {
             const tableMap = new Map<number, TableEntry>();
             const tables = [...existing.data.values(), table];
+            console.log("GET TABLE")
+            console.log(tables);
             sortedTableEntries(tables).forEach((t) => {
               tableMap.set(t.id, t);
             });

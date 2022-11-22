@@ -35,6 +35,8 @@ export class Display {
 
   private recordsData: RecordsData;
 
+  columnOrder: number[];
+
   scrollOffset: Writable<number>;
 
   horizontalScrollOffset: Writable<number>;
@@ -67,14 +69,16 @@ export class Display {
     meta: Meta,
     columnsDataStore: ColumnsDataStore,
     recordsData: RecordsData,
+    columnOrder: number[]
   ) {
     this.meta = meta;
     this.columnsDataStore = columnsDataStore;
     this.recordsData = recordsData;
+    this.columnOrder = columnOrder;
     this.horizontalScrollOffset = writable(0);
     this.scrollOffset = writable(0);
     this.isTableInspectorVisible = writable(true);
-
+  
     this.customizedColumnWidths = new WritableMap();
 
     this.columnPlacements = derived(

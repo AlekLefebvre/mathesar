@@ -6,12 +6,14 @@
     ID_ADD_NEW_COLUMN,
     ID_ROW_CONTROL_COLUMN,
     type TabularDataSelection,
+    type ProcessedColumn,
   } from '@mathesar/stores/table-data';
   import { rowHeaderWidthPx } from '@mathesar/geometry';
   import Body from './Body.svelte';
   import Header from './header/Header.svelte';
   import StatusPane from './StatusPane.svelte';
   import TableInspector from './table-inspector/TableInspector.svelte';
+  import { tables as tablesStore } from '@mathesar/stores/tables';
 
   const tabularData = getTabularDataStoreFromContext();
 
@@ -20,7 +22,7 @@
 
   $: ({ processedColumns, display, isLoading, selection } = $tabularData);
   $: ({ activeCell } = selection);
-  $: ({ horizontalScrollOffset, scrollOffset, isTableInspectorVisible } =
+  $: ({ horizontalScrollOffset, scrollOffset, isTableInspectorVisible, columnOrder } =
     display);
   $: hasNewColumnButton = allowsDdlOperations;
   /**
@@ -30,9 +32,10 @@
    */
   $: supportsTableInspector = allowsDdlOperations;
   $: sheetColumns = (() => {
+    const orderedProcessedColumns = orderProcessedColumns($processedColumns, columnOrder);
     const columns = [
       { column: { id: ID_ROW_CONTROL_COLUMN, name: 'ROW_CONTROL' } },
-      ...$processedColumns.values(),
+      ...orderedProcessedColumns.values(),
     ];
     if (hasNewColumnButton) {
       columns.push({ column: { id: ID_ADD_NEW_COLUMN, name: 'ADD_NEW' } });
@@ -66,6 +69,23 @@
         );
       }
     }
+  }
+
+  function orderProcessedColumns(processedColumns: Map<number, ProcessedColumn>, columnOrder: number[]):Map<number, ProcessedColumn> {
+    console.log("ORDER COLUMNS")
+    console.log(columnOrder)
+    let allColumns = [...processedColumns.values()];
+    let orderedColumns = new Map<number, ProcessedColumn>();
+      columnOrder.forEach(id => {
+      var index = allColumns.map(column => column.id).indexOf(id);
+      if (index !== -1) {
+        const orderColumn = allColumns.splice(index, 1)[0]
+        orderedColumns.set(orderColumn.id, orderColumn);
+      }
+    });
+    allColumns.forEach(column => orderedColumns.set(column.id, column))
+    console.log(orderedColumns);
+    return orderedColumns;
   }
 
   $: void selectAndActivateFirstCellOnTableLoad($isLoading, selection);

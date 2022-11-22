@@ -26,6 +26,9 @@ export interface TableEntry {
       template: string;
     };
   };
+  display_options: {
+    column_order: number[];
+  };
 }
 
 export interface SplitTableResponse {

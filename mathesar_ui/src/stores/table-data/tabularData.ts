@@ -28,6 +28,7 @@ export interface TabularDataProps {
   id: DBObjectEntry['id'];
   abstractTypesMap: AbstractTypesMap;
   meta?: Meta;
+  column_order?: number[];
   /**
    * Keys are columns ids. Values are cell values.
    *
@@ -48,6 +49,8 @@ export class TabularData {
 
   meta: Meta;
 
+  columnOrder: number[];
+
   columnsDataStore: ColumnsDataStore;
 
   processedColumns: ProcessedColumnsStore;
@@ -67,6 +70,7 @@ export class TabularData {
       props.contextualFilters ?? new Map<number, string | number>();
     this.id = props.id;
     this.meta = props.meta ?? new Meta();
+    this.columnOrder = props.column_order ?? [];
     this.columnsDataStore = new ColumnsDataStore({
       parentId: this.id,
       hiddenColumns: contextualFilters.keys(),
@@ -82,6 +86,7 @@ export class TabularData {
       this.meta,
       this.columnsDataStore,
       this.recordsData,
+      this.columnOrder,
     );
 
     this.processedColumns = derived(

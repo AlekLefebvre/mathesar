@@ -23,7 +23,7 @@
   });
 
   export let recordId: number;
-  export let table: Pick<TableEntry, 'id' | 'name'>;
+  export let table: Pick<TableEntry, 'id' | 'name' | 'display_options'>;
   export let fkColumn: Pick<Column, 'id' | 'name'>;
 
   $: abstractTypesMap = $currentDbAbstractTypes.data;
@@ -31,6 +31,7 @@
     id: table.id,
     abstractTypesMap,
     meta,
+    column_order: table.display_options.column_order, //check for null ?
     contextualFilters: new Map([[fkColumn.id, recordId]]),
   });
   $: tabularDataStore.set(tabularData);
