@@ -8,7 +8,6 @@ from db.metadata import get_empty_metadata
 
 SUPPORTED_TABLE_ALTER_ARGS = {'name', 'columns', 'description'}
 
-
 def rename_table(name, schema, engine, rename_to):
     # TODO reuse metadata
     table = reflect_table(name, schema, engine, metadata=get_empty_metadata())
@@ -18,7 +17,6 @@ def rename_table(name, schema, engine, rename_to):
         ctx = MigrationContext.configure(conn)
         op = Operations(ctx)
         op.rename_table(table.name, rename_to, schema=table.schema)
-
 
 def comment_on_table(name, schema, engine, comment):
     # Not using the DDLElement since the examples from the docs are
