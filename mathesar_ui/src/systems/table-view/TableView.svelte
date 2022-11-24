@@ -8,11 +8,11 @@
     type TabularDataSelection,
   } from '@mathesar/stores/table-data';
   import { rowHeaderWidthPx } from '@mathesar/geometry';
+  import { orderProcessedColumns } from '@mathesar/utils/tables';
   import Body from './Body.svelte';
   import Header from './header/Header.svelte';
   import StatusPane from './StatusPane.svelte';
   import TableInspector from './table-inspector/TableInspector.svelte';
-  import { orderProcessedColumns } from '@mathesar/utils/tables';
 
   const tabularData = getTabularDataStoreFromContext();
 

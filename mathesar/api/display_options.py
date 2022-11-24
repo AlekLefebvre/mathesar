@@ -23,11 +23,6 @@ def _money_display_options_schema():
             }]
     }
 
-TABLE_DISPLAY_OPTIONS = {
-    "options": {
-        "colum_order": []
-    }
-}
 
 DISPLAY_OPTIONS_BY_UI_TYPE = LazyDictionary(
     {
