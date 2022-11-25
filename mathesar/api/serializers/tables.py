@@ -143,9 +143,6 @@ class TableSerializer(MathesarErrorMessageMixin, serializers.ModelSerializer):
             raise ProgrammingAPIException(e)
         return table
 
-    def reorder_columns(self, colum_order):
-        self.colum_order = colum_order
-
     def update(self, instance, validated_data):
         if self.partial:
             # Save the fields that are stored in the model.
