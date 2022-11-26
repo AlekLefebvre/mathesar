@@ -8,16 +8,17 @@
   import type { ProcessedColumn } from '@mathesar/stores/table-data';
   import ProcessedColumnName from '@mathesar/components/column/ProcessedColumnName.svelte';
   import CellBackground from '@mathesar/components/CellBackground.svelte';
-
   export let processedColumn: ProcessedColumn;
   export let isSelected = false;
 </script>
 
 <div>
   <CellBackground when={isSelected} color="var(--cell-bg-color-row-selected)" />
-  <Button appearance="ghost" on:click>
-    <ProcessedColumnName {processedColumn} />
-  </Button>
+  <div on:dragstart on:drop on:dragover draggable={isSelected}>
+    <Button appearance="ghost" on:click>
+      <ProcessedColumnName {processedColumn} />
+    </Button>
+  </div>
 </div>
 
 <style lang="scss">

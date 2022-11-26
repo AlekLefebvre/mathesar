@@ -13,6 +13,7 @@
   } from '@mathesar/components/sheet';
   import HeaderCell from './header-cell/HeaderCell.svelte';
   import NewColumnCell from './new-column-cell/NewColumnCell.svelte';
+  import type { ProcessedColumn } from '@mathesar/stores/table-data';
 
   const tabularData = getTabularDataStoreFromContext();
 
@@ -24,6 +25,15 @@
 
   function addColumn(e: CustomEvent<Partial<Column>>) {
     void columnsDataStore.add(e.detail);
+  }
+
+  function dragStart(column: ProcessedColumn) {
+    console.log("start drag");
+  }
+
+  function dropColumn(e: CustomEvent<Partial<Column>>, processedColumn: ProcessedColumn) {
+    console.log("drop column");
+    console.log(e);
   }
 </script>
 
@@ -49,6 +59,9 @@
             processedColumn,
           )}
           on:click={() => selection.toggleColumnSelection(processedColumn)}
+          on:dragstart={() => dragStart(processedColumn)}
+          on:drop={(e) => dropColumn(e, processedColumn)}
+          on:dragover={(e) => {e.preventDefault()}}
         />
         <SheetCellResizer columnIdentifierKey={columnId} />
       </div>

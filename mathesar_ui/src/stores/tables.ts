@@ -218,11 +218,11 @@ export function renameTable(
   );
 }
 
-export function reorderColumns(
+export function saveDisplayOptions(
   id: number,
-  column_order: string,
+  display_options: {},
 ): CancellablePromise<TableEntry> {
-  const promise = patchAPI<TableEntry>(`/api/db/v0/tables/${id}/`, { display_options: column_order });
+  const promise = patchAPI<TableEntry>(`/api/db/v0/tables/${id}/`, { display_options: display_options });
   return new CancellablePromise(
     (resolve, reject) => {
       void promise.then((value) => {

@@ -86,7 +86,7 @@ export class TabularData {
       this.meta,
       this.columnsDataStore,
       this.recordsData,
-      this.columnOrder,
+      this.columnOrder
     );
 
     this.processedColumns = derived(
