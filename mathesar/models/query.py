@@ -4,6 +4,7 @@ from mathesar.state.cached_property import cached_property
 
 from db.queries.base import DBQuery, InitialColumn
 from db.queries.operations.process import get_transforms_with_summarizes_speced
+from mathesar.api.exceptions.query_exceptions.exceptions import DeletedColumnAccess
 from db.transforms.operations.deserialize import deserialize_transformation
 from db.transforms.operations.serialize import serialize_transformation
 
@@ -45,7 +46,6 @@ def _get_validator_for_initial_columns(field_name):
                 )
                 raise DictHasBadKeys(message, field=field_name)
             optional_keys = {
-                "display_name",
                 "jp_path",
             }
             valid_keys = {
@@ -149,12 +149,21 @@ class UIQuery(BaseModel, Relation):
         ],
     )
 
-    # dict of column ids/aliases to display options
+    # dict of aliases to display options
     display_options = models.JSONField(
         null=True,
         blank=True,
         validators=[
             _get_validator_for_dict(field_name="display_options"),
+        ],
+    )
+
+    # dict of aliases to display names
+    display_names = models.JSONField(
+        null=True,
+        blank=True,
+        validators=[
+            _get_validator_for_dict(field_name="display_names"),
         ],
     )
 
@@ -190,15 +199,15 @@ class UIQuery(BaseModel, Relation):
     def initial_columns_described(self):
         return tuple(
             {
-                'alias': col['alias'],
-                'display_name': col.get('display_name')
-            }
-            | {
+                'alias': initial_col['alias'],
+                'display_name': self._get_display_name_for_alias(
+                    initial_col['alias']
+                ),
                 'type': dj_col.db_type.id,
                 'type_options': dj_col._sa_column.type_options,
                 'display_options': dj_col.display_options
             }
-            for col, dj_col in zip(self.initial_columns, self.initial_dj_columns)
+            for initial_col, dj_col in zip(self.initial_columns, self.initial_dj_columns)
         )
 
     def _describe_query_column(self, sa_col):
@@ -339,20 +348,10 @@ class UIQuery(BaseModel, Relation):
 
     @cached_property
     def _alias_to_display_name(self):
-        display_name_map = {
-            initial_column['alias']: initial_column.get('display_name')
-            for initial_column
-            in self.initial_columns
-        }
-        if self.transformations is not None:
-            display_name_map.update(
-                {
-                    k: v
-                    for transformation in self.transformations
-                    for k, v in transformation.get('display_names', {}).items()
-                }
-            )
-        return display_name_map
+        alias_to_display_name = {}
+        if self.display_names is not None:
+            alias_to_display_name.update(self.display_names)
+        return alias_to_display_name
 
     @property
     def _sa_engine(self):
@@ -366,7 +365,10 @@ def _get_dj_column_for_initial_db_column(initial_column):
 
 
 def _get_column_pair_from_id(col_id):
-    col = Column.objects.get(id=col_id)
+    try:
+        col = Column.objects.get(id=col_id)
+    except Column.DoesNotExist:
+        raise DeletedColumnAccess(col_id)
     return col.table.oid, col.attnum
 
 

@@ -102,6 +102,7 @@
     display: grid;
     grid-template: 1fr auto / 1fr;
     height: 100%;
+    overflow: hidden;
   }
   .table-inspector-view {
     display: flex;
