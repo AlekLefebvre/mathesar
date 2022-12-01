@@ -222,6 +222,7 @@ export function saveDisplayOptions(
   id: number,
   display_options: {},
 ): CancellablePromise<TableEntry> {
+  console.log("SAVE DISPLAY OPTIONS")
   const promise = patchAPI<TableEntry>(`/api/db/v0/tables/${id}/`, { display_options: display_options });
   return new CancellablePromise(
     (resolve, reject) => {

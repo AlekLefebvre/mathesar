@@ -14,26 +14,61 @@
   import HeaderCell from './header-cell/HeaderCell.svelte';
   import NewColumnCell from './new-column-cell/NewColumnCell.svelte';
   import type { ProcessedColumn } from '@mathesar/stores/table-data';
-
+  import { saveDisplayOptions } from '@mathesar/stores/tables';
   const tabularData = getTabularDataStoreFromContext();
 
   export let hasNewColumnButton = false;
 
-  $: ({ columnsDataStore, selection, processedColumns } = $tabularData);
+  $: ({ columnsDataStore, selection, processedColumns, display, id } = $tabularData);
+  $: ({ columnOrder } = display);
   $: ({ columns } = columnsDataStore);
   $: ({ selectedCells, columnsSelectedWhenTheTableIsEmpty } = selection);
+  let draggedColumn: ProcessedColumn;
+  let dragHoverColumn: ProcessedColumn;
 
   function addColumn(e: CustomEvent<Partial<Column>>) {
     void columnsDataStore.add(e.detail);
   }
 
-  function dragStart(column: ProcessedColumn) {
+  function dragStart(e: DragEvent, column: ProcessedColumn) {
     console.log("start drag");
+    console.log(column);
+    draggedColumn = column;
   }
 
-  function dropColumn(e: CustomEvent<Partial<Column>>, processedColumn: ProcessedColumn) {
+  function dropColumn(e: DragEvent, column: ProcessedColumn) {
     console.log("drop column");
     console.log(e);
+    console.log(column);
+    console.log(columnOrder);
+    columnOrder.splice(columnOrder.indexOf(draggedColumn.id), 1);
+    columnOrder.splice(columnOrder.indexOf(column.id), 0, draggedColumn.id);
+    console.log(columnOrder);
+    display.columnOrder = columnOrder;
+    saveDisplayOptions(id, display);
+  }
+
+  function dragEnter(e: DragEvent, column: ProcessedColumn) {
+    console.log("drag enter");
+    console.log(e);
+    console.log(column)
+    dragHoverColumn = column;
+  }
+
+  function dragLeave(e: DragEvent) {
+    console.log("drag leave");
+    console.log(e);
+  }
+
+  function isColumnDragOver(column: ProcessedColumn) {
+    if (column && dragHoverColumn) {
+      return column.id == dragHoverColumn.id;
+    }
+    return false;
+  }
+
+  async function handleTableNameChange(name: string): Promise<void> {
+    
   }
 </script>
 
@@ -58,8 +93,11 @@
             $columnsSelectedWhenTheTableIsEmpty,
             processedColumn,
           )}
+          isDragOver={isColumnDragOver(processedColumn)}
           on:click={() => selection.toggleColumnSelection(processedColumn)}
-          on:dragstart={() => dragStart(processedColumn)}
+          on:dragstart={(e) => dragStart(e, processedColumn)}
+          on:dragenter={(e) => dragEnter(e, processedColumn)}
+          on:dragleave={(e) => dragLeave(e)}
           on:drop={(e) => dropColumn(e, processedColumn)}
           on:dragover={(e) => {e.preventDefault()}}
         />

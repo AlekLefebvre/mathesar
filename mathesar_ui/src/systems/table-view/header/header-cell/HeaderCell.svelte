@@ -10,11 +10,12 @@
   import CellBackground from '@mathesar/components/CellBackground.svelte';
   export let processedColumn: ProcessedColumn;
   export let isSelected = false;
+  export let isDragOver = false;
 </script>
 
-<div>
+<div class:is-dragover={isDragOver}>
   <CellBackground when={isSelected} color="var(--cell-bg-color-row-selected)" />
-  <div on:dragstart on:drop on:dragover draggable={isSelected}>
+  <div on:dragstart on:drop on:dragover on:dragenter on:dragleave draggable={isSelected}>
     <Button appearance="ghost" on:click>
       <ProcessedColumnName {processedColumn} />
     </Button>
@@ -29,6 +30,11 @@
       width: 100%;
       padding: 0.26rem 0.5rem;
       font-size: inherit;
+    }
+
+    &.is-dragover {
+      background-color: yellow;
+      margin-left: 20px;
     }
   }
 </style>
