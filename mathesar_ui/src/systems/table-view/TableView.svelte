@@ -21,8 +21,9 @@
 
   $: ({ processedColumns, display, isLoading, selection } = $tabularData);
   $: ({ activeCell } = selection);
-  $: ({ horizontalScrollOffset, scrollOffset, isTableInspectorVisible, columnOrder } =
+  $: ({ horizontalScrollOffset, scrollOffset, isTableInspectorVisible, displayOptions } =
     display);
+  $: ({ column_order } = displayOptions);
   $: hasNewColumnButton = allowsDdlOperations;
   /**
    * These are separate variables for readability and also to keep the door open
@@ -31,7 +32,7 @@
    */
   $: supportsTableInspector = allowsDdlOperations;
   $: sheetColumns = (() => {
-    const orderedProcessedColumns = orderProcessedColumns($processedColumns, columnOrder);
+    const orderedProcessedColumns = orderProcessedColumns($processedColumns, column_order);
     const columns = [
       { column: { id: ID_ROW_CONTROL_COLUMN, name: 'ROW_CONTROL' } },
       ...orderedProcessedColumns.values(),

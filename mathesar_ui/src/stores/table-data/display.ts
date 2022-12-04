@@ -4,7 +4,7 @@ import { WritableMap } from '@mathesar-component-library';
 import type { Meta } from './meta';
 import type { ColumnsDataStore } from './columns';
 import { type Row, type RecordsData, filterRecordRows } from './records';
-
+import type { TableDisplayOptions } from '@mathesar/api/tables'
 // @deprecated
 export const DEFAULT_COLUMN_WIDTH = 160;
 
@@ -34,8 +34,6 @@ export class Display {
   private columnsDataStore: ColumnsDataStore;
 
   private recordsData: RecordsData;
-
-  columnOrder: number[];
 
   scrollOffset: Writable<number>;
 
@@ -69,12 +67,10 @@ export class Display {
     meta: Meta,
     columnsDataStore: ColumnsDataStore,
     recordsData: RecordsData,
-    columnOrder: number[]
   ) {
     this.meta = meta;
     this.columnsDataStore = columnsDataStore;
     this.recordsData = recordsData;
-    this.columnOrder = columnOrder;
     this.horizontalScrollOffset = writable(0);
     this.scrollOffset = writable(0);
     this.isTableInspectorVisible = writable(true);

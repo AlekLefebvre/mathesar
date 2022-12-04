@@ -13,6 +13,7 @@ export interface TableSettings {
     customized: boolean;
     template: string;
   };
+  column_order: number[];
 }
 
 /**
@@ -28,9 +29,6 @@ export interface TableEntry {
   data_files?: number[];
   columns: MinimalColumnDetails[];
   settings: TableSettings;
-  display_options: {
-    column_order: number[];
-  };
 }
 
 /**

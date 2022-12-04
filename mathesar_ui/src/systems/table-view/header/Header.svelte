@@ -20,7 +20,8 @@
   export let hasNewColumnButton = false;
 
   $: ({ columnsDataStore, selection, processedColumns, display, id } = $tabularData);
-  $: ({ columnOrder } = display);
+  $: ({ displayOptions } = display);
+  $: ({ column_order = [] } = displayOptions);
   $: ({ columns } = columnsDataStore);
   $: ({ selectedCells, columnsSelectedWhenTheTableIsEmpty } = selection);
   let draggedColumn: ProcessedColumn;
@@ -40,12 +41,17 @@
     console.log("drop column");
     console.log(e);
     console.log(column);
-    console.log(columnOrder);
-    columnOrder.splice(columnOrder.indexOf(draggedColumn.id), 1);
-    columnOrder.splice(columnOrder.indexOf(column.id), 0, draggedColumn.id);
-    console.log(columnOrder);
-    display.columnOrder = columnOrder;
-    saveDisplayOptions(id, display);
+    console.log(column_order);
+    for (let column_id of $processedColumns.keys())  {
+      if (!column_order.includes(column_id)) {
+        column_order.push(column_id);
+      }
+    }
+    console.log(column_order);
+    column_order.splice(column_order.indexOf(draggedColumn.id), 1);
+    column_order.splice(column_order.indexOf(column.id), 0, draggedColumn.id);
+    console.log(column_order);
+    saveColumnOrder(table, column_order);//
   }
 
   function dragEnter(e: DragEvent, column: ProcessedColumn) {

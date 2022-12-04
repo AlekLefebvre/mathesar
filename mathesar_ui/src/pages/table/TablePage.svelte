@@ -44,7 +44,7 @@
 
 <svelte:head><title>{makeSimplePageTitle(table.name)}</title></svelte:head>
 
-<LayoutWithHeader fitViewport restrictWidth={false}>
+<LayoutWithHeader fitViewport>
   <div class="table-page">
     <ActionsPane {database} {schema} {table} />
     <TableView usesVirtualList allowsDdlOperations />

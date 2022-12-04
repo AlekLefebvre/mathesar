@@ -14,16 +14,18 @@ export function isTableImportConfirmationRequired(table: TableEntry): boolean {
   );
 }
 
-export function orderProcessedColumns(processedColumns: Map<number, ProcessedColumn>, columnOrder: number[]):Map<number, ProcessedColumn> {
+export function orderProcessedColumns(processedColumns: Map<number, ProcessedColumn>, columnOrder: number[] = [] ):Map<number, ProcessedColumn> {
   const allColumns = [...processedColumns.values()];
   const orderedColumns = new Map<number, ProcessedColumn>();
-    columnOrder.forEach((id) => {
+  columnOrder.forEach((id) => {
     const index = allColumns.map((column) => column.id).indexOf(id);
     if (index !== -1) {
       const orderColumn = allColumns.splice(index, 1)[0];
       orderedColumns.set(orderColumn.id, orderColumn);
     }
   });
-  allColumns.forEach((column) => orderedColumns.set(column.id, column));
+  allColumns.forEach((column) => {
+    orderedColumns.set(column.id, column);
+  });
   return orderedColumns;
 }

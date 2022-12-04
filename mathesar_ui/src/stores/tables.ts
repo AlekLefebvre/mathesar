@@ -225,10 +225,11 @@ export function renameTable(
 
 export function saveDisplayOptions(
   id: number,
-  display_options: {},
+  display_options: TableDisplayOptions,
 ): CancellablePromise<TableEntry> {
   console.log("SAVE DISPLAY OPTIONS")
-  const promise = patchAPI<TableEntry>(`/api/db/v0/tables/${id}/`, { display_options: display_options });
+  console.log(display_options);
+  const promise = patchAPI<TableEntry>(`/api/db/v0/tables/${id}/`, { display_options });
   return new CancellablePromise(
     (resolve, reject) => {
       void promise.then((value) => {
@@ -466,5 +467,14 @@ export function saveRecordSummaryTemplate(
   const { customized } = previewSettings;
   return saveTableSettings(table, {
     preview_settings: customized ? previewSettings : { customized },
+  });
+}
+
+export function saveColumnOrder(
+  table: Pick<TableEntry, 'id' | 'settings' | 'schema'>,
+  columnOrder: TableSettings['column_order'],
+): Promise<void> {
+  return saveTableSettings(table, {
+    column_order: columnOrder
   });
 }
