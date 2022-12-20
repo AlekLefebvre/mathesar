@@ -17,6 +17,9 @@ export function isTableImportConfirmationRequired(table: TableEntry): boolean {
 export function orderProcessedColumns(processedColumns: Map<number, ProcessedColumn>, columnOrder: number[] = [] ):Map<number, ProcessedColumn> {
   const allColumns = [...processedColumns.values()];
   const orderedColumns = new Map<number, ProcessedColumn>();
+  console.log("orderProcessedColumns")
+  console.log(columnOrder);
+  columnOrder = columnOrder ?? [];
   columnOrder.forEach((id) => {
     const index = allColumns.map((column) => column.id).indexOf(id);
     if (index !== -1) {

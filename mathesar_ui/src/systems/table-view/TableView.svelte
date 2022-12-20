@@ -13,17 +13,20 @@
   import Header from './header/Header.svelte';
   import StatusPane from './StatusPane.svelte';
   import TableInspector from './table-inspector/TableInspector.svelte';
+  import type { TableEntry } from '@mathesar/api/tables';
 
   const tabularData = getTabularDataStoreFromContext();
 
+  export let table: TableEntry;
   export let usesVirtualList = false;
   export let allowsDdlOperations = false;
 
   $: ({ processedColumns, display, isLoading, selection } = $tabularData);
   $: ({ activeCell } = selection);
-  $: ({ horizontalScrollOffset, scrollOffset, isTableInspectorVisible, displayOptions } =
+  $: ({ horizontalScrollOffset, scrollOffset, isTableInspectorVisible } =
     display);
-  $: ({ column_order } = displayOptions);
+  $: ({ settings } = table || {settings : {column_order: []}});
+  $: ({ column_order } = settings  || {column_order: []});
   $: hasNewColumnButton = allowsDdlOperations;
   /**
    * These are separate variables for readability and also to keep the door open
@@ -32,6 +35,8 @@
    */
   $: supportsTableInspector = allowsDdlOperations;
   $: sheetColumns = (() => {
+    console.log("TableView")
+    console.log(column_order);
     const orderedProcessedColumns = orderProcessedColumns($processedColumns, column_order);
     const columns = [
       { column: { id: ID_ROW_CONTROL_COLUMN, name: 'ROW_CONTROL' } },
@@ -86,7 +91,7 @@
           bind:horizontalScrollOffset={$horizontalScrollOffset}
           bind:scrollOffset={$scrollOffset}
         >
-          <Header {hasNewColumnButton} />
+          <Header {hasNewColumnButton} {column_order} {table} />
           <Body {usesVirtualList} />
         </Sheet>
       {/if}

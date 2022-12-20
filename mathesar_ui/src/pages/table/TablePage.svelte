@@ -31,7 +31,6 @@
     id: table.id,
     abstractTypesMap,
     meta,
-    column_order: table.display_options && table.display_options.column_order || [],
   });
   $: tabularDataStore.set(tabularData);
 
@@ -47,7 +46,7 @@
 <LayoutWithHeader fitViewport>
   <div class="table-page">
     <ActionsPane {database} {schema} {table} />
-    <TableView usesVirtualList allowsDdlOperations />
+    <TableView usesVirtualList allowsDdlOperations {table} />
   </div>
 </LayoutWithHeader>
 
